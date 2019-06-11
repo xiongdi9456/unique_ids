@@ -1,3 +1,6 @@
+## 1.0.1
+* fix build error on test codes
+
 ## 1.0.0
 
 * You can
