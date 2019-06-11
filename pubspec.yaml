@@ -1,8 +1,8 @@
 name: unique_ids
 description: can create uuid and can get adid/idfa for mobile app(android/ios)
-version: 1.0.1
+version: 1.0.2
 author: Daewook. Kwon <tossy@tossy.me>
-homepage: https://tossy.me
+homepage: https://github.com/team-tossy/unique_ids
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
