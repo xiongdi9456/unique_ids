@@ -1,3 +1,12 @@
+## 1.0.4
+modify example.
+
+## 1.0.3
+* add readme files.
+
+## 1.0.2
+* add homepage 
+
 ## 1.0.1
 * fix build error on test codes
 
