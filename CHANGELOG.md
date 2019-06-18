@@ -1,3 +1,6 @@
+## 1.0.5
+add comment and upgrade flutter
+
 ## 1.0.4
 modify example.
 
