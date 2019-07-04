@@ -1,3 +1,6 @@
+## 1.0.6
+update kotlin version
+
 ## 1.0.5
 add comment and upgrade flutter
 
