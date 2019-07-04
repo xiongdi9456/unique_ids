@@ -1,3 +1,6 @@
+## 1.0.7
+fix conflict
+
 ## 1.0.6
 update kotlin version
 
