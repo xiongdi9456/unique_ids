@@ -1,4 +1,4 @@
-package android
+
 
 group 'me.tossy.flutter.unique_ids'
 version '1.0-SNAPSHOT'
