@@ -17,9 +17,6 @@
         result(adid.UUIDString);
     } else if ([call.method isEqualToString:@"uuid"]) {
         result([NSUUID UUID].UUIDString);
-    }
-    if ([@"getPlatformVersion" isEqualToString:call.method]) {
-        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
     } else {
         result(FlutterMethodNotImplemented);
     }
