@@ -1,3 +1,5 @@
+## 1.0.10
+fix ios build error for object-c
 
 ## 1.0.9
 update gradle
