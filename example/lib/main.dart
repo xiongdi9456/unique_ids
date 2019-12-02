@@ -14,6 +14,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _adId = 'Unknown';
   String _uuid = 'Unknown';
+  String _realDeviceId = 'Unknown';
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _init() async {
     String adId;
     String uuid;
+    String realDeviceId;
 
     try {
       uuid = await UniqueIds.uuid;
@@ -37,11 +39,18 @@ class _MyAppState extends State<MyApp> {
       adId = 'Failed to get adId version.';
     }
 
+    try {
+      realDeviceId = await UniqueIds.realDeviceId;
+    } on PlatformException {
+      realDeviceId = 'Failed to get realDeviceId.';
+    }
+
     if (!mounted) return;
 
     setState(() {
       _adId = adId;
       _uuid = uuid;
+      _realDeviceId = realDeviceId;
     });
   }
 
@@ -57,6 +66,7 @@ class _MyAppState extends State<MyApp> {
               children: [
                 Text('Running on adId: $_adId\n'),
                 Text('created uuid: $_uuid'),
+                Text('created realDeviceId: $_realDeviceId'),
               ],
             )),
       ),

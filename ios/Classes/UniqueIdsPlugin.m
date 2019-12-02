@@ -17,6 +17,8 @@
         result(adid.UUIDString);
     } else if ([call.method isEqualToString:@"uuid"]) {
         result([NSUUID UUID].UUIDString);
+    } else if ([call.method isEqualToString:@"realDeviceId"]) {
+        result([NSUUID UUID].UUIDString);
     } else {
         result(FlutterMethodNotImplemented);
     }

@@ -20,4 +20,10 @@ class UniqueIds {
     final String _uuid = await _channel.invokeMethod('uuid');
     return _uuid;
   }
+
+  /// create uuid.
+  static Future<String> get realDeviceId async {
+    final String _realDeviceId = await _channel.invokeMethod('realDeviceId');
+    return _realDeviceId;
+  }
 }
