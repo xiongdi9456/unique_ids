@@ -18,7 +18,9 @@
     } else if ([call.method isEqualToString:@"uuid"]) {
         result([NSUUID UUID].UUIDString);
     } else if ([call.method isEqualToString:@"realDeviceId"]) {
-        result([NSUUID UUID].UUIDString);
+        NSString *deviceId= [[NSUUID UUID] UUIDString];
+        deviceId = [deviceId stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        result(deviceId);
     } else {
         result(FlutterMethodNotImplemented);
     }
