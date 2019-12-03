@@ -34,7 +34,7 @@ class UniqueIdsPlugin(private val registrar: Registrar) : MethodCallHandler {
             call.method == "adId" -> {
                 AdIdTask(result).execute(registrar.context())
             }
-            call.method == "uuid" -> result.success(UUID.randomUUID().toString())
+            call.method == "uuid" -> result.success(UUID.randomUUID().toString().replace("-", ""))
             call.method == "realDeviceId" -> {
                 RealDeviceIdTask(result).execute(registrar.context())
             }

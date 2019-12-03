@@ -16,7 +16,9 @@
         NSUUID *adid = [[ASIdentifierManager sharedManager] advertisingIdentifier];
         result(adid.UUIDString);
     } else if ([call.method isEqualToString:@"uuid"]) {
-        result([NSUUID UUID].UUIDString);
+        NSString *uuId= [[NSUUID UUID] UUIDString];
+        uuId = [uuId stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        result(uuId);
     } else if ([call.method isEqualToString:@"realDeviceId"]) {
         NSString *deviceId= [[NSUUID UUID] UUIDString];
         deviceId = [deviceId stringByReplacingOccurrencesOfString:@"-" withString:@""];
