@@ -1,7 +1,12 @@
 package me.tossy.flutter.unique_ids
 
 import android.content.Context
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.AsyncTask
+import android.os.Build
+import android.provider.Settings
+import android.text.TextUtils
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -10,13 +15,14 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 import java.io.IOException
-import java.util.*
-import android.os.Build
 import java.net.NetworkInterface
 import java.net.SocketException
 import java.security.MessageDigest
-import java.util.UUID
+import java.util.*
 
 class UniqueIdsPlugin(private val registrar: Registrar) : MethodCallHandler {
 
