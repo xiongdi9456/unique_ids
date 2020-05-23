@@ -20,7 +20,8 @@
         uuId = [uuId stringByReplacingOccurrencesOfString:@"-" withString:@""];
         result(uuId);
     } else if ([call.method isEqualToString:@"realDeviceId"]) {
-        NSString *deviceId= [[NSUUID UUID] UUIDString];
+        //NSString *deviceId= [[NSUUID UUID] UUIDString];
+        NSString *deviceId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         deviceId = [deviceId stringByReplacingOccurrencesOfString:@"-" withString:@""];
         result(deviceId);
     } else {
