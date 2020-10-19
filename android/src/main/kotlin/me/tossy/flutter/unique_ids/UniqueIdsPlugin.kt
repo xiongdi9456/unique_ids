@@ -65,7 +65,6 @@ private class AdIdTask(private val result: Result) : AsyncTask<Context, Void, St
         adInfo?.let {
             id = adInfo.id
         }
-
         return id
     }
 
@@ -79,9 +78,9 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     
     override fun doInBackground(vararg params: Context?): String? {
         //获取设备ID
-        var uuidStr = getDeviceMacAddress(context)
+        var uuidStr = getDeviceMacAddress(params[0])
         if (isInvalidId(uuidStr)) {
-            uuidStr = getUniquePsuedoID(context)
+            uuidStr = getUniquePsuedoID(params[0])
         }
         //为了统一格式对设备的唯一标识进行md5加密 最终生成32位字符串
         val md5RealDeviceId = getMD5(uuidStr, false)
