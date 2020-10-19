@@ -93,7 +93,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     }
 
     //获得独一无二的Psuedo ID
-    private fun getUniquePsuedoID(context: Context): String {
+    private fun getUniquePsuedoID(context: Context?): String {
         var serial: String? = null
         //使用硬件信息拼凑出来的15位号码
         val mSzDevIDShort = "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.CPU_ABI.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10 //13 位
@@ -104,7 +104,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
         return UUID(mSzDevIDShort.hashCode().toLong(), serial.hashCode().toLong()).toString()
     }
 
-    private fun getDeviceAndroidId(context: Context): String {
+    private fun getDeviceAndroidId(context: Context?): String {
         val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
         return if (isInvalidId(androidId)) UUID.randomUUID().toString().replace("-", "") else androidId // 随便一个初始化
     }
@@ -136,7 +136,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
      * @param context
      * @return Mac地址
      */
-    private fun getDeviceMacAddress(context: Context): String {
+    private fun getDeviceMacAddress(context: Context?): String {
         val mac: String = when {
             Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> {
                 getMacDefault(context)
