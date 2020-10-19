@@ -105,7 +105,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     }
 
     private fun getDeviceAndroidId(context: Context?): String {
-        val androidId = ""
+        var androidId = ""
         if (context != null) {
             androidId = Settings.Secure.getString(context?.contentResolver, Settings.Secure.ANDROID_ID)
         }
