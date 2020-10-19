@@ -105,7 +105,10 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     }
 
     private fun getDeviceAndroidId(context: Context?): String {
-        val androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        val androidId = ""
+        if (context != null) {
+            androidId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        }
         return if (isInvalidId(androidId)) UUID.randomUUID().toString().replace("-", "") else androidId // 随便一个初始化
     }
 
