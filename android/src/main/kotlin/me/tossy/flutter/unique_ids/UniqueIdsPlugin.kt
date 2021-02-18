@@ -57,10 +57,11 @@ private class AdIdTask(private val result: Result) : AsyncTask<Context, Void, St
         } catch (e: IOException) {
             // Unrecoverable error connecting to Google Play services (e.g.,
             // the old version of the service doesn't support getting AdvertisingId).
+            return "";
         } catch (e: GooglePlayServicesNotAvailableException) {
             // Google Play services is not available entirely.
+            return "";
         }
-
         var id = ""
         adInfo?.let {
             id = adInfo.id
@@ -77,14 +78,17 @@ private class AdIdTask(private val result: Result) : AsyncTask<Context, Void, St
 private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, Void, String>() {
     
     override fun doInBackground(vararg params: Context?): String? {
-        //获取设备ID
-        var uuidStr = getDeviceMacAddress(params[0])
-        if (isInvalidId(uuidStr)) {
-            uuidStr = getUniquePsuedoID(params[0])
-        }
-        //为了统一格式对设备的唯一标识进行md5加密 最终生成32位字符串
-        val md5RealDeviceId = getMD5(uuidStr, false)
-        return md5RealDeviceId
+        //获取设备Android
+        return getUniquePsuedoID(params[0])
+        // var uuidStr = Settings.Secure.getString(params[0].contentResolver, Settings.Secure.ANDROID_ID)
+        // //getUniquePsuedoID
+        // if (isInvalidId(uuidStr)) {
+        //     uuidStr = getUniquePsuedoID(params[0])
+        // }
+        // //为了统一格式对设备的唯一标识进行md5加密 最终生成32位字符串
+        // // val md5RealDeviceId = getMD5(uuidStr, false)
+        // // return md5RealDeviceId
+        // return uuidStr
     }
 
     override fun onPostExecute(md5RealDeviceId: String?) {
@@ -116,7 +120,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     private val deviceSerial: String?
         private get() {
             var str: String? = ""
-            if (Build.VERSION.SDK_INT >= 9 && Build.VERSION.SDK_INT < 26) {
+            if (Build.VERSION.SDK_INT < 26) {
                 str = Build.SERIAL
             } else if (Build.VERSION.SDK_INT >= 26) {
                 try {
@@ -133,104 +137,7 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
     private fun isInvalidId(str: CharSequence?): Boolean {
         return str == null || str.isEmpty() || str == "unknown"
     }
-    /**
-     * 获取设备MAC地址
-     *
-     * @param context
-     * @return Mac地址
-     */
-    private fun getDeviceMacAddress(context: Context?): String {
-        val mac: String = when {
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> {
-                getMacDefault(context)
-            }
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.N -> {
-                macAddressM
-            }
-            else -> {
-                macFromHardware
-            }
-        }
-        return if (mac == "02:00:00:00:00:00") "" else mac
-    }
-
-    /**
-     * Android  6.0 之前（不包括6.0）
-     * 必须的权限  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
-     * @param context
-     * @return String
-     */
-    private fun getMacDefault(context: Context?): String {
-        var mac = "02:00:00:00:00:00"
-        if (context == null) {
-            return mac
-        }
-        val wifi = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                ?: return mac
-        var info: WifiInfo? = null
-        try {
-            info = wifi.connectionInfo
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        if (info == null) {
-            return mac
-        }
-        mac = info.macAddress
-        if (!TextUtils.isEmpty(mac)) {
-            mac = mac.toUpperCase(Locale.ENGLISH)
-        }
-        return mac
-    }
-
-    /**
-     * Android 6.0（包括） - Android 7.0（不包括）
-     * @return String
-     */
-    private val macAddressM: String
-        private get() {
-            var wifiAddress = "02:00:00:00:00:00"
-            try {
-                wifiAddress = BufferedReader(FileReader(File("/sys/class/net/wlan0/address"))).readLine()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            return wifiAddress
-        }
-
-    /**
-     * 遍历循环所有的网络接口，找到接口是 wlan0
-     * 必须的权限 <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-     * *type = eth0,获取有线mac
-     * *type = wlan0,获取无线mac
-     * @return String
-     */
-    private val macFromHardware: String
-        private get() {
-            try {
-                val all: List<NetworkInterface> = Collections.list(NetworkInterface.getNetworkInterfaces())
-                for (nif in all) {
-                    if (!nif.name.equals("wlan0", ignoreCase = true) && !nif.name.equals("eth0", ignoreCase = true)) {
-                        continue
-                    }
-                    val macBytes = nif.hardwareAddress
-                    if (macBytes == null || macBytes.isEmpty()) {
-                        return ""
-                    }
-                    val res1 = StringBuilder()
-                    for (b in macBytes) {
-                        res1.append(String.format("%02X:", b))
-                    }
-                    if (res1.isNotEmpty()) {
-                        res1.deleteCharAt(res1.length - 1)
-                    }
-                    return res1.toString()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return "02:00:00:00:00:00"
-        }
+    
 
     private fun getMD5(message: String, upperCase: Boolean): String {
         var md5str = ""
