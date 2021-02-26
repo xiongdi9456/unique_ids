@@ -78,22 +78,43 @@ private class AdIdTask(private val result: Result) : AsyncTask<Context, Void, St
 private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, Void, String>() {
     
     override fun doInBackground(vararg params: Context?): String? {
-        //获取设备Android
-        return getUniquePsuedoID(params[0])
-        // var uuidStr = Settings.Secure.getString(params[0].contentResolver, Settings.Secure.ANDROID_ID)
-        // //getUniquePsuedoID
-        // if (isInvalidId(uuidStr)) {
-        //     uuidStr = getUniquePsuedoID(params[0])
-        // }
-        // //为了统一格式对设备的唯一标识进行md5加密 最终生成32位字符串
-        // // val md5RealDeviceId = getMD5(uuidStr, false)
-        // // return md5RealDeviceId
-        // return uuidStr
+        //获取Real设备ID
+        var uuidStr = getMediaDrmUniqueID(WIDEVINE_UUID)
+        if (isInvalidId(uuidStr)) {
+            uuidStr = getUniquePsuedoID(params[0])
+        }
+
+        return getMD5(uuidStr, false)
     }
 
     override fun onPostExecute(md5RealDeviceId: String?) {
         super.onPostExecute(md5RealDeviceId)
         result.success(md5RealDeviceId)
+    }
+
+    private val WIDEVINE_UUID = UUID(-0x121074568629b532L, -0x5c37d8232ae2de13L)
+
+    private fun getMediaDrmUniqueID(uuid: UUID): String? {
+        var wvDrm: MediaDrm? = null
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            try {
+                wvDrm = MediaDrm(uuid)
+                val mivevineId = wvDrm.getPropertyByteArray(MediaDrm.PROPERTY_DEVICE_UNIQUE_ID)
+                val md = MessageDigest.getInstance("SHA-256")
+                md.update(mivevineId)
+                UUID.nameUUIDFromBytes(md.digest()).toString()
+            } catch (e: Exception) {
+                null
+            } finally {
+                if (wvDrm != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        wvDrm.close()
+                    } else {
+                        wvDrm.release()
+                    }
+                }
+            }
+        } else null
     }
 
     //获得独一无二的Psuedo ID
@@ -130,7 +151,6 @@ private class RealDeviceIdTask(private val result: Result) : AsyncTask<Context, 
                 } catch (throwable: Throwable) {
                 }
             }
-            //Build.VERSION.SDK_INT>=29会得到unknown(需要配置READ_PHONE危险权限)
             return str
         }
 
